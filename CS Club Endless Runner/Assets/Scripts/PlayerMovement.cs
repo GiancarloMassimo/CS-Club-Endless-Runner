@@ -19,19 +19,40 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     LayerMask groundLayer;
 
+
+    [SerializeField]
+    GameObject groundHitEffect;
+
     Rigidbody2D rb;
+    Animator anim;
     float normalGravityScale;
+    bool isGrounded;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
         normalGravityScale = rb.gravityScale;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
+        if (IsGrounded())
         {
+            if (!isGrounded)
+            {
+                Instantiate(groundHitEffect, groundCheckPoint.position + Vector3.down * 0.5f, Quaternion.Euler(-90, 0, 0));
+            }
+            isGrounded = true;
+        } 
+        else
+        {
+            isGrounded = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        {
+            anim.SetTrigger("jump");
             rb.velocity = new Vector2(0, jumpForce);
         }
     }

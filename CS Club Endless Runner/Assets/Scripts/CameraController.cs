@@ -21,19 +21,18 @@ public class CameraController : MonoBehaviour
     float rotationSpeed;
 
     [SerializeField]
-    float translationAmount, translationSpeed;
-
-    [SerializeField]
     float extraRotationRate, extraRotationRateAcceleration;
 
     [SerializeField]
     float cameraHorizontalOffsetToAngleProportion, cameraVerticalOffsetToAngleProportion;
 
+    [SerializeField]
+    GameObject atmosphereEffects;
+
     int directionMultiplier = 1;
     float desiredAngle;
     float initialExtraRotationRate;
     Vector3 desiredPos;
-
 
     void OnEnable()
     {
@@ -65,12 +64,6 @@ public class CameraController : MonoBehaviour
         desiredAngle = Mathf.Min(desiredAngle, maxAngleAfterAcceleration);
 
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, desiredAngle * directionMultiplier), rotationSpeed * Time.deltaTime);
-
-        /*if (Mathf.Abs(transform.position.x) < xPositionFromPlayer + translationAmount)
-        {
-            Debug.Log(desiredPos);
-            desiredPos += transform.right * directionMultiplier * translationSpeed * Time.deltaTime;
-        }*/
         
         if (desiredAngle < maxAngleAfterAcceleration)
         {
@@ -90,5 +83,11 @@ public class CameraController : MonoBehaviour
         desiredPos = new Vector3(directionMultiplier * xPositionFromPlayer, 0, transform.position.z);
         desiredAngle = angle;
         extraRotationRate = initialExtraRotationRate;
+        SwitchEffects();
+    }
+
+    void SwitchEffects()
+    {
+        atmosphereEffects.transform.localScale = new Vector2(directionMultiplier, 1);
     }
 }
