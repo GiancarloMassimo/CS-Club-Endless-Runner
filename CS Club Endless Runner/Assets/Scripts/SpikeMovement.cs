@@ -7,6 +7,8 @@ public class SpikeMovement : MonoBehaviour
     [SerializeField]
     float lifetime;
 
+    Rigidbody2D rb;
+ 
     SpikeSpawner spawner;
 
     void OnEnable()
@@ -23,11 +25,12 @@ public class SpikeMovement : MonoBehaviour
     {
         spawner = SpikeSpawner.Instance;
         Destroy(gameObject, lifetime);
+        rb = GetComponent<Rigidbody2D>();
     }
 
-    void Update()
+    private void FixedUpdate()
     {
-        transform.Translate(Vector2.right * spawner.DirectionMultiplier * spawner.SpikeSpeed * Time.deltaTime);
+        rb.velocity = Vector2.right * spawner.DirectionMultiplier * spawner.SpikeSpeed;
     }
 
     void DeleteAfterPortalHit()

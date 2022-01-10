@@ -20,7 +20,7 @@ public class PortalCollision : MonoBehaviour
 
     bool CollidingWithPortal()
     {
-        return Physics2D.Raycast(transform.position, Vector2.down, 1000, portalLayer);
+        return Physics2D.Raycast(transform.position, Vector2.right, 0.5f, portalLayer);
     }
 
     void HitPortal()
