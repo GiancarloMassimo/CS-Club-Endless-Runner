@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -33,6 +34,7 @@ public class CameraController : MonoBehaviour
     float desiredAngle;
     float initialExtraRotationRate;
     Vector3 desiredPos;
+    bool shaking;
 
     void OnEnable()
     {
@@ -50,13 +52,16 @@ public class CameraController : MonoBehaviour
         desiredPos = new Vector3(directionMultiplier * xPositionFromPlayer, transform.position.y, transform.position.z);
     }
 
-    void Update()
+    void LateUpdate()
     {
-        transform.position = Vector3.Lerp(
-            transform.position, 
-            desiredPos, 
-            transitionSpeed * Time.deltaTime
-            );
+        if (!shaking)
+        {
+            transform.position = Vector3.Lerp(
+                transform.position,
+                desiredPos,
+                transitionSpeed * Time.deltaTime
+                );
+        }
 
         extraRotationRate += extraRotationRateAcceleration * Time.deltaTime;
         desiredAngle += extraRotationRate * Time.deltaTime;
@@ -70,7 +75,6 @@ public class CameraController : MonoBehaviour
             desiredPos += transform.up * desiredAngle / 360f * cameraVerticalOffsetToAngleProportion;
             desiredPos += transform.right * directionMultiplier * -1 * desiredAngle / 360f * cameraHorizontalOffsetToAngleProportion;
         }
-
     }
 
     void ChangePosition()
@@ -89,5 +93,36 @@ public class CameraController : MonoBehaviour
     void SwitchEffects()
     {
         atmosphereEffects.transform.localScale = new Vector2(directionMultiplier, 1);
+    }
+
+    public void StartShake(float magnitude, float duration)
+    {
+        shaking = true;
+        StartCoroutine(Shake(magnitude, duration, magnitude / duration));
+    }
+
+    IEnumerator Shake (float magnitude, float duration, float fadeTime)
+    {
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            float x = Random.Range(-1f, 1f) * magnitude;
+            float y = Random.Range(-1f, 1f) * magnitude;
+
+            transform.position += new Vector3(x, y, 0);
+
+            elapsed += Time.deltaTime;
+            magnitude = Mathf.MoveTowards(magnitude, 0f, fadeTime * Time.deltaTime);
+
+            if (Time.timeScale == 0)
+            {
+                yield break;
+            }
+
+            yield return null;
+        }
+
+        shaking = false;
     }
 }

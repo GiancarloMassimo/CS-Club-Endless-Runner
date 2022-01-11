@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifetime: 5
+  destroyEffect: {fileID: 2750124504957792481, guid: 83f3e33c15289e44a8e70f3e558f26d5, type: 3}
 --- !u!61 &1480109433935436377
 BoxCollider2D:
   m_ObjectHideFlags: 0

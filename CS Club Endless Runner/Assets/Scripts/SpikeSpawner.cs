@@ -39,6 +39,9 @@ public class SpikeSpawner : MonoBehaviour
 
     void Awake()
     {
+        //Ignore Collision between spikes and the ground
+        Physics2D.IgnoreLayerCollision(7, 3);
+
         if (Instance == null)
         {
             Instance = this;

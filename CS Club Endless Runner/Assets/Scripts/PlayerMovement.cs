@@ -26,12 +26,15 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody2D rb;
     Animator anim;
     float normalGravityScale;
-    bool isGrounded;
+    bool isGrounded = true;
+
+    CameraController cam;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        cam = Camera.main.GetComponent<CameraController>();
         normalGravityScale = rb.gravityScale;
     }
 
@@ -41,6 +44,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (!isGrounded)
             {
+                cam.StartShake(0.05f, 0.5f);
                 Instantiate(groundHitEffect, groundCheckPoint.position + Vector3.down * 0.5f, Quaternion.Euler(-90, 0, 0));
             }
             isGrounded = true;
